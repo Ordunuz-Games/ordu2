@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORDUNUZ.GAMES - Yenilikçi ve Güncel Oyun Sağlayıcısı</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              900: '#0369a1',
+              neon: '#00d2ff',
+              darkBg: '#080c16',
+              cardBg: 'rgba(15, 23, 42, 0.75)'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #080c16;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    /* Background Ambient Glows */
+    .glow-orb-1 {
+      position: absolute;
+      top: -10%;
+      left: 15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 210, 255, 0.15) 0%, rgba(8, 12, 22, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb-2 {
+      position: absolute;
+      top: 30%;
+      right: 5%;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, rgba(8, 12, 22, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* 3D Perspective Card Container */
+    .tilt-wrapper {
+      perspective: 1000px;
+    }
+
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out, box-shadow 0.2s ease-out;
+      will-change: transform;
+    }
+
+    .tilt-card-reset {
+      transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+    }
+
+    /* Inner 3D elements depth */
+    .tilt-depth-bg {
+      transform: translateZ(20px);
+    }
+    .tilt-depth-logo {
+      transform: translateZ(60px);
+    }
+    .tilt-depth-shine {
+      transform: translateZ(80px);
+    }
+
+    /* Custom Button & Glow effects */
+    .btn-neon {
+      background: linear-gradient(135deg, #00d2ff 0%, #0072ff 100%);
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-neon:hover {
+      box-shadow: 0 0 35px rgba(0, 210, 255, 0.75);
+      transform: translateY(-2px);
+    }
+
+    .glass-card {
+      background: rgba(13, 20, 36, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Stars Particles Canvas */
+    #starsCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-brand-neon selection:text-black">
+
+  <canvas id="starsCanvas"></canvas>
+  <div class="glow-orb-1"></div>
+  <div class="glow-orb-2"></div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="relative z-20 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+    <!-- Brand Logo -->
+    <a href="#" class="flex items-center gap-2 group">
+      <span class="text-2xl font-black tracking-wider text-white">
+        ORDUNUZ<span class="text-brand-neon font-extrabold text-3xl">.GAMES</span>
+      </span>
+    </a>
+
+    <!-- Navigation Links -->
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+      <a href="#oyunlar" class="hover:text-brand-neon transition-colors">Oyunlar</a>
+      <a href="#nasıl-çalışır" class="hover:text-brand-neon transition-colors">Nasıl Çalışır?</a>
+      <a href="#hakkımızda" class="hover:text-brand-neon transition-colors">Hakkımızda</a>
+    </nav>
+
+    <!-- Header Action Button -->
+    <button class="btn-neon px-6 py-2.5 rounded-xl font-bold text-sm text-white tracking-wide">
+      Giriş Yap
+    </button>
+  </header>
+
+  <main class="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 md:py-16 my-auto flex-1 flex flex-col justify-center">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- HERO LEFT CONTENT -->
+      <div class="lg:col-span-7 flex flex-col items-start space-y-6">
+        <!-- Badge Tag -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 border border-brand-500/30 text-xs font-semibold text-brand-400 backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
+          Steam Paylaşımlı Oyun & Hesap
+        </div>
+
+        <!-- Main Heading -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase leading-none">
+          Yenilikçi ve Güncel <br class="hidden sm:inline" />
+          <span class="bg-gradient-to-r from-white via-slate-100 to-brand-neon bg-clip-text text-transparent">
+            Oyun Sağlayıcısı
+          </span>
+        </h1>
+
+        <!-- Subtitle Text -->
+        <p class="text-base sm:text-lg text-slate-400 max-w-xl font-normal leading-relaxed">
+          En güncel oyunları cebin yanmadan oyna. Paylaşımlı hesap sistemi ve anında otomatik teslimat ile binlerce oyuna olduğundan çok daha uygun fiyatlarla erişin.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <a href="#oyunlar" class="btn-neon px-8 py-4 rounded-xl text-base font-bold text-white tracking-wide inline-flex items-center gap-2">
+            Oyunlara Göz At
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- HERO RIGHT - INTERACTIVE 3D TILT LOGO -->
+      <div class="lg:col-span-5 flex justify-center items-center">
+        <div id="tiltWrapper" class="tilt-wrapper relative w-[320px] h-[320px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] cursor-pointer">
+          
+          <!-- Interactive Tilt Card -->
+          <div id="tiltCard" class="tilt-card relative w-full h-full rounded-full flex items-center justify-center p-4">
+            
+            <!-- Outer Glow Halo behind circle -->
+            <div class="tilt-depth-bg absolute inset-0 rounded-full bg-gradient-to-tr from-brand-neon/30 to-blue-600/30 blur-2xl opacity-75"></div>
+
+            <!-- Main Interactive Outer Ring Container -->
+            <div class="relative w-full h-full rounded-full bg-slate-950/80 border-2 border-brand-neon/60 shadow-[0_0_60px_rgba(0,210,255,0.4)] flex items-center justify-center overflow-hidden p-3">
+              
+              <!-- Subtle Background Starry Pattern inside Circle -->
+              <div class="absolute inset-0 bg-[radial-gradient(#00d2ff_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+
+              <!-- SVG GAMING LOGO (ORDUNUZ HESAP SATIŞ) -->
+              <div class="tilt-depth-logo w-full h-full flex items-center justify-center relative">
+                <svg viewBox="0 0 400 400" class="w-full h-full drop-shadow-[0_0_20px_rgba(0,210,255,0.6)]">
+                  <defs>
+                    <!-- Linear & Radial Gradients for Emblem -->
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#00f0ff"/>
+                      <stop offset="50%" stop-color="#0066ff"/>
+                      <stop offset="100%" stop-color="#002b80"/>
+                    </linearGradient>
+
+                    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#ffffff"/>
+                      <stop offset="40%" stop-color="#d4f4ff"/>
+                      <stop offset="100%" stop-color="#38bdf8"/>
+                    </linearGradient>
+
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#facc15"/>
+                      <stop offset="50%" stop-color="#ffe875"/>
+                      <stop offset="100%" stop-color="#eab308"/>
+                    </linearGradient>
+
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur stdDeviation="6" result="blur" />
+                      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                  </defs>
+
+                  <!-- Outer Blue Glowing Ring -->
+                  <circle cx="200" cy="200" r="175" fill="none" stroke="url(#ringGrad)" stroke-width="8" filter="url(#glow)"/>
+                  <circle cx="200" cy="200" r="162" fill="none" stroke="#00f0ff" stroke-width="3" stroke-dasharray="6 4" opacity="0.7"/>
+                  <circle cx="200" cy="200" r="148" fill="none" stroke="url(#ringGrad)" stroke-width="12"/>
+
+                  <!-- Stars / Sparkles background inside Emblem -->
+                  <g fill="#00d2ff" opacity="0.8">
+                    <circle cx="100" cy="110" r="2"/>
+                    <circle cx="300" cy="110" r="3"/>
+                    <circle cx="200" cy="80" r="2.5"/>
+                    <circle cx="80" cy="240" r="2"/>
+                    <circle cx="320" cy="240" r="2"/>
+                  </g>
+
+                  <!-- ORDUNUZ 3D Main Title Text -->
+                  <g font-family="'Inter', sans-serif" font-weight="900" text-anchor="middle">
+                    <!-- Text 3D Shadow Layers -->
+                    <text x="200" y="195" font-size="52" fill="#021d49" letter-spacing="1">ORDUNUZ</text>
+                    <text x="200" y="192" font-size="52" fill="#004499" letter-spacing="1">ORDUNUZ</text>
+                    <text x="200" y="189" font-size="52" fill="url(#textGrad)" stroke="#00d2ff" stroke-width="2" letter-spacing="1" filter="url(#glow)">ORDUNUZ</text>
+                  </g>
+
+                  <!-- Gold Ribbon Banner for "HESAP SATIŞ." -->
+                  <g transform="translate(0, 10)">
+                    <!-- Ribbon Backdrop -->
+                    <path d="M 50 220 L 350 220 L 330 255 L 70 255 Z" fill="#001838" stroke="#0072ff" stroke-width="3"/>
+                    
+                    <!-- Ribbon Golden Main Bar -->
+                    <path d="M 60 225 L 340 225 L 325 250 L 75 250 Z" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+
+                    <!-- Golden Banner Text -->
+                    <text x="200" y="244" font-family="'Inter', sans-serif" font-weight="900" font-size="22" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="3" filter="url(#glow)">
+                      HESAP SATIŞ.
+                    </text>
+                  </g>
+
+                  <!-- Sparkle flares -->
+                  <polygon points="320,110 323,116 329,119 323,122 320,128 317,122 311,119 317,116" fill="#ffffff"/>
+                  <polygon points="80,210 82,214 86,216 82,218 80,222 78,218 74,216 78,214" fill="#00d2ff"/>
+                </svg>
+              </div>
+
+              <!-- Interactive Glass Shine Overlay on Mouse Move -->
+              <div id="cardShine" class="tilt-depth-shine absolute inset-0 rounded-full pointer-events-none opacity-0 transition-opacity duration-300" 
+                   style="background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);">
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- STATS BAR BELOW HERO -->
+  <section class="relative z-10 w-full max-w-6xl mx-auto px-6 py-6 mb-8">
+    <div class="glass-card rounded-2xl p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center border border-slate-800">
+      
+      <div class="flex flex-col items-center">
+        <span class="text-2xl sm:text-3xl font-black text-brand-neon">Birçok</span>
+        <span class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Oyun Çeşidi</span>
+      </div>
+
+      <div class="flex flex-col items-center border-l border-slate-800/80">
+        <span class="text-2xl sm:text-3xl font-black text-brand-neon">%99</span>
+        <span class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Müşteri Memnuniyeti</span>
+      </div>
+
+      <div class="flex flex-col items-center border-l-0 md:border-l border-slate-800/80">
+        <span class="text-2xl sm:text-3xl font-black text-brand-neon">7/24</span>
+        <span class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Aktif Destek</span>
+      </div>
+
+      <div class="flex flex-col items-center border-l border-slate-800/80">
+        <span class="text-2xl sm:text-3xl font-black text-brand-neon">7/24</span>
+        <span class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Otomatik Teslimat</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION: HOW IT WORKS (NASIL ÇALIŞIR?) -->
+  <section id="nasıl-çalışır" class="relative z-10 w-full max-w-7xl mx-auto px-6 py-12 text-center">
+    <span class="text-xs font-bold uppercase tracking-widest text-brand-400">NASIL ÇALIŞIR?</span>
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">Kolayca Oyununuza Kavuşabilirsiniz</h2>
+    <p class="text-sm text-slate-400 max-w-md mx-auto mb-10">Karmaşık işlemler yok sadece alın ve oynayın.</p>
+  </section>
+
+  <!-- FLOATING DISCORD BUTTON -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <a href="#" target="_blank" class="flex items-center gap-3 px-5 py-3 rounded-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold text-sm shadow-[0_0_25px_rgba(88,101,242,0.5)] transition-all transform hover:scale-105">
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 127.14 96.36">
+        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0,0,0,3.36,3.36,0,0,0-1.86,1.86A77.7,77.7,0,0,0,74,10.59a97.4,97.4,0,0,0-20.83,0A77.7,77.7,0,0,0,47.53,1.86a3.36,3.36,0,0,0-1.86-1.86,105.15,105.15,0,0,0-26.23,8.07A105.89,105.89,0,0,0,3.19,69.59a105.73,105.73,0,0,0,32.32,16.32,3.36,3.36,0,0,0,3.64-1.18,74.3,74.3,0,0,0,6.62-10.79,3.36,3.36,0,0,0-1.83-4.63,69.7,69.7,0,0,1-10.08-4.81,3.36,3.36,0,0,1-.33-5.59c.68-.51,1.37-1,2.06-1.55a3.36,3.36,0,0,1,3.52-.39A76.36,76.36,0,0,0,63.57,63.7a76.36,76.36,0,0,0,24.36-7.14,3.36,3.36,0,0,1,3.52.39c.69.53,1.38,1,2.06,1.55a3.36,3.36,0,0,1-.33,5.59,69.7,69.7,0,0,1-10.08,4.81,3.36,3.36,0,0,0-1.83,4.63,74.3,74.3,0,0,0,6.62,10.79,3.36,3.36,0,0,0,3.64,1.18,105.73,105.73,0,0,0,32.32-16.32A105.89,105.89,0,0,0,107.7,8.07ZM42.45,56.75c-6.19,0-11.28-5.68-11.28-12.67s4.94-12.67,11.28-12.67c6.39,0,11.43,5.73,11.28,12.67C53.73,51.07,48.84,56.75,42.45,56.75Zm42.24,0c-6.19,0-11.28-5.68-11.28-12.67s4.94-12.67,11.28-12.67c6.39,0,11.43,5.73,11.28,12.67C95.97,51.07,91.08,56.75,84.69,56.75Z"/>
+      </svg>
+      Discord'a Katıl
+    </a>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // 1. 3D PARALLAX MOUSE TILT INTERACTION LOGIC
+    // -------------------------------------------------------------
+    const tiltWrapper = document.getElementById('tiltWrapper');
+    const tiltCard = document.getElementById('tiltCard');
+    const cardShine = document.getElementById('cardShine');
+
+    let isHovered = false;
+
+    // Calculate mouse position relative to card center
+    tiltWrapper.addEventListener('mousemove', (e) => {
+      const rect = tiltWrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left; // Mouse X inside element
+      const y = e.clientY - rect.top;  // Mouse Y inside element
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Rotation calculation (-20deg to +20deg max)
+      const rotateX = ((y - centerY) / centerY) * -22;
+      const rotateY = ((x - centerX) / centerX) * 22;
+
+      // Apply smooth 3D transform
+      tiltCard.classList.remove('tilt-card-reset');
+      tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+
+      // Dynamic Shine angle following cursor
+      const shineX = (x / rect.width) * 100;
+      const shineY = (y / rect.height) * 100;
+      cardShine.style.background = `radial-gradient(circle at ${shineX}% ${shineY}%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 65%)`;
+      cardShine.style.opacity = '1';
+    });
+
+    tiltWrapper.addEventListener('mouseenter', () => {
+      isHovered = true;
+    });
+
+    // Reset smoothly on mouse leave
+    tiltWrapper.addEventListener('mouseleave', () => {
+      isHovered = false;
+      tiltCard.classList.add('tilt-card-reset');
+      tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      cardShine.style.opacity = '0';
+    });
+
+    // Mobile / Touch support fallback tilt
+    tiltWrapper.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = tiltWrapper.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -15;
+        const rotateY = ((x - centerX) / centerX) * 15;
+
+        tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+      }
+    }, { passive: true });
+
+    tiltWrapper.addEventListener('touchend', () => {
+      tiltCard.classList.add('tilt-card-reset');
+      tiltCard.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    });
+
+    // -------------------------------------------------------------
+    // 2. AMBIENT BACKGROUND STARS CANVAS ANIMATION
+    // -------------------------------------------------------------
+    const canvas = document.getElementById('starsCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let stars = [];
+    const numStars = 70;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5 + 0.5,
+          alpha: Math.random(),
+          speed: Math.random() * 0.015 + 0.005
+        });
+      }
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        star.alpha += star.speed;
+        if (star.alpha > 1 || star.alpha < 0) {
+          star.speed = -star.speed;
+        }
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 210, 255, ${Math.abs(star.alpha) * 0.6})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#00d2ff';
+        ctx.fill();
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      initStars();
+    });
+
+    window.onload = function() {
+      resizeCanvas();
+      initStars();
+      animateStars();
+    };
+  </script>
+</body>
+</html>
